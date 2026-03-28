@@ -1,4 +1,5 @@
 import pygame
+from src.core.scene_names import GAME_OVER_SCENE
 from src.scenes.base_scene import BaseScene
 from src.entities.player import Player
 from src.systems.parallax_system import ParallaxSystem
@@ -13,12 +14,8 @@ class GameScene(BaseScene):
         self.pipes = []
         self.coins = []
         self.score = 0
-        self.game_over = False
 
     def update(self, dt):
-        if self.game_over:
-            return
-
         keys = pygame.key.get_pressed()
 
         self.player.update(dt, keys)
@@ -36,7 +33,8 @@ class GameScene(BaseScene):
 
         for p in self.pipes:
             if p.collides(self.player.rect()):
-                self.game_over = True
+                self.trigger_game_over()
+                return
 
         for c in self.coins[:]:
             if self.player.rect().colliderect(c.rect()):
@@ -44,7 +42,7 @@ class GameScene(BaseScene):
                 self.score += 1
 
         if self.player.y < 0 or self.player.y > 600:
-            self.game_over = True
+            self.trigger_game_over()
 
     def draw(self, screen):
         self.parallax.draw(screen)
@@ -59,3 +57,6 @@ class GameScene(BaseScene):
 
     def handle_event(self, event):
         pass
+
+    def trigger_game_over(self):
+        self.game.state_machine.change(GAME_OVER_SCENE, score=self.score)

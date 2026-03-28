@@ -1,7 +1,14 @@
 import pygame
 from config import WIDTH, HEIGHT, FPS
+from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE
 from src.core.state_machine import StateMachine
+from src.core.scene_registry import register
+
+# Import scenes once here to avoid circular imports in scene modules.
+from src.scenes.menu_scene import MenuScene
 from src.scenes.game_scene import GameScene
+from src.scenes.game_over_scene import GameOverScene
+
 
 class Game:
     def __init__(self):
@@ -9,8 +16,12 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
-        self.state_machine = StateMachine()
-        self.state_machine.change(GameScene(self))
+        register(MENU_SCENE, MenuScene)
+        register(GAME_SCENE, GameScene)
+        register(GAME_OVER_SCENE, GameOverScene)
+
+        self.state_machine = StateMachine(self)
+        self.state_machine.change(MENU_SCENE)
 
     def run(self):
         while self.running:
