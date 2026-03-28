@@ -6,7 +6,7 @@ class Pipe:
     def __init__(self):
         self.x = WIDTH
         self.width = 80
-        self.gap = 150
+        self.gap = random.randint(120, 180)
         self.top = random.randint(50, HEIGHT - 200)
 
         self.gap_y = self.top + self.gap // 2

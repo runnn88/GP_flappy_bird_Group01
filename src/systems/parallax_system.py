@@ -1,12 +1,12 @@
 import pygame
 from config import WIDTH, HEIGHT
+from src.utils.loader import load_image
 
 class Layer:
     def __init__(self, speed):
         self.speed = speed
         self.x = 0
-        self.image = pygame.Surface((WIDTH, HEIGHT))
-        self.image.fill((50, 50, 50))
+        self.image = load_image("assets/images/placeholder.png", (WIDTH, HEIGHT))
 
     def update(self, dt):
         self.x -= self.speed * dt
