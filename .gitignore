@@ -1,0 +1,63 @@
+# ----------------------
+# PYTHON
+# ----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# ----------------------
+# PYGAME / GAME FILES
+# ----------------------
+# (keep assets tracked, ignore temp files only)
+*.log
+*.tmp
+*.bak
+
+# ----------------------
+# IDEs
+# ----------------------
+
+# VSCode
+.vscode/
+
+# PyCharm / IntelliJ
+.idea/
+
+# ----------------------
+# OS FILES
+# ----------------------
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# ----------------------
+# TEST / CACHE
+# ----------------------
+.pytest_cache/
+.cache/
+
+# ----------------------
+# JUPYTER (if any)
+# ----------------------
+.ipynb_checkpoints/
+
+# ----------------------
+# ENV / SECRET FILES
+# ----------------------
+.env.local
+.env.dev
+.env.prod
