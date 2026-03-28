@@ -1,5 +1,6 @@
 import pygame
 from config import WIDTH, HEIGHT, FPS
+from src.core.game_context import GameContext
 from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE
 from src.core.state_machine import StateMachine
 from src.core.scene_registry import register
@@ -15,6 +16,7 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.running = True
+        self.context = GameContext()
 
         register(MENU_SCENE, MenuScene)
         register(GAME_SCENE, GameScene)

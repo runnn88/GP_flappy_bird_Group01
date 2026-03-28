@@ -1,0 +1,6 @@
+class GameContext:
+    def __init__(self):
+        self.score = 0
+        self.is_game_over = False
+        self.scroll_speed = 200
+        self.gravity = 1200

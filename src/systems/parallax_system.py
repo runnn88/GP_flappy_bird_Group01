@@ -26,10 +26,7 @@ class ParallaxSystem:
             Layer(200)
         ]
 
-    def update(self, dt):
+    def update(self, dt, context):
         for l in self.layers:
-            l.update(dt)
-
-    def draw(self, screen):
-        for l in self.layers:
-            l.draw(screen)
+            layer_dt = dt * (context.scroll_speed / 200)
+            l.update(layer_dt)

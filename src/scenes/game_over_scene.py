@@ -3,10 +3,6 @@ from src.core.scene_names import GAME_SCENE, MENU_SCENE
 from src.scenes.base_scene import BaseScene
 
 class GameOverScene(BaseScene):
-    def __init__(self, game, score):
-        super().__init__(game)
-        self.score = score
-
     def enter(self):
         self.font = pygame.font.SysFont(None, 60)
 
@@ -17,7 +13,7 @@ class GameOverScene(BaseScene):
         screen.fill((0, 0, 0))
 
         over = self.font.render("GAME OVER", True, (255,0,0))
-        score = self.font.render(f"Score: {self.score}", True, (255,255,255))
+        score = self.font.render(f"Score: {self.game.context.score}", True, (255,255,255))
         retry = self.font.render("Press R to Retry", True, (200,200,200))
         menu = self.font.render("Press ESC for Menu", True, (200,200,200))
 

@@ -1,5 +1,5 @@
 import pygame
-from config import GRAVITY, FLAP_FORCE
+from config import FLAP_FORCE
 from src.systems.animation_system import Animation
 from src.utils.loader import load_image
 
@@ -16,17 +16,14 @@ class Player:
 
         self.animation = Animation(frames, fps=10)
 
-    def update(self, dt, keys):
+    def update(self, dt, keys, context):
         if keys[pygame.K_SPACE]:
             self.vel = FLAP_FORCE
 
-        self.vel += GRAVITY * dt
+        self.vel += context.gravity * dt
         self.y += self.vel * dt
 
         self.animation.update(dt)
-
-    def draw(self, screen):
-        screen.blit(self.animation.get_frame(), (self.x, self.y))
 
     def rect(self):
         return pygame.Rect(self.x, self.y, 50, 35)

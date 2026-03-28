@@ -1,6 +1,6 @@
 import pygame
 import random
-from config import WIDTH, HEIGHT, SCROLL_SPEED
+from config import WIDTH, HEIGHT
 
 class Pipe:
     def __init__(self):
@@ -11,13 +11,8 @@ class Pipe:
 
         self.gap_y = self.top + self.gap // 2
 
-    def update(self, dt):
-        self.x -= SCROLL_SPEED * dt
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, (0,255,0), (self.x, 0, self.width, self.top))
-        pygame.draw.rect(screen, (0,255,0),
-                         (self.x, self.top + self.gap, self.width, HEIGHT))
+    def update(self, dt, context):
+        self.x -= context.scroll_speed * dt
 
     def offscreen(self):
         return self.x + self.width < 0
