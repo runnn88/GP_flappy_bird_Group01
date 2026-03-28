@@ -4,3 +4,4 @@ class GameContext:
         self.is_game_over = False
         self.scroll_speed = 200
         self.gravity = 1200
+        self.background_theme = "noon"

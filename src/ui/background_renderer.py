@@ -4,7 +4,7 @@ from config import WIDTH, HEIGHT
 
 class BackgroundRenderer:
     def __init__(self):
-        self.fallback = load_image("assets/images/placeholder.png", (WIDTH, HEIGHT))
+        self.fallback = load_image("assets/images/backgrounds/night/1.png", (WIDTH, HEIGHT))
 
     def draw(self, screen, parallax):
         if hasattr(parallax, "layers"):

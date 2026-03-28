@@ -9,7 +9,7 @@ from src.ui.renderer import SceneRenderer
 class GameScene(BaseScene):
     def enter(self):
         self.player = Player()
-        self.parallax = ParallaxSystem()
+        self.parallax = ParallaxSystem(self.game.context.background_theme)
         self.spawner = SpawnSystem()
         self.renderer = SceneRenderer()
 
