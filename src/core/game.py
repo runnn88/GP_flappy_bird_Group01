@@ -1,7 +1,7 @@
 import pygame
 from config import WIDTH, HEIGHT, FPS
 from src.core.game_context import GameContext
-from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE
+from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE, SETTING_SCENE
 from src.core.state_machine import StateMachine
 from src.core.scene_registry import register
 
@@ -9,6 +9,7 @@ from src.core.scene_registry import register
 from src.scenes.menu_scene import MenuScene
 from src.scenes.game_scene import GameScene
 from src.scenes.game_over_scene import GameOverScene
+from src.scenes.setting_scene import SettingScene
 
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
         register(MENU_SCENE, MenuScene)
         register(GAME_SCENE, GameScene)
         register(GAME_OVER_SCENE, GameOverScene)
+        register(SETTING_SCENE, SettingScene)
 
         self.state_machine = StateMachine(self)
         self.state_machine.change(MENU_SCENE)
