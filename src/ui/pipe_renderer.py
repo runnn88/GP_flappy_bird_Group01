@@ -4,7 +4,7 @@ from src.utils.loader import load_image
 
 class PipeRenderer:
     def __init__(self):
-        self.image = load_image("assets/images/placeholder.png", (80, HEIGHT))
+        self.image = load_image("assets/images/pipe-green.png", (80, HEIGHT))
 
     def draw(self, screen, pipes):
         for pipe in pipes:
