@@ -2,12 +2,13 @@ import pygame
 from src.core.scene_names import MENU_SCENE
 from src.scenes.base_scene import BaseScene
 from src.ui.button import Button
+from src.utils.loader import load_font
 from config import WIDTH 
 
 class SettingScene(BaseScene):
     def enter(self):
-        self.font = pygame.font.SysFont(None, 48)
-        self.title_font = pygame.font.SysFont(None, 64)
+        self.font = load_font("VT323-Regular.ttf", 48)
+        self.title_font = load_font("PressStart2P-Regular.ttf", 50)
         
         self.themes = ["noon", "sunset", "night", "sunrise"]
         self.buttons = []
