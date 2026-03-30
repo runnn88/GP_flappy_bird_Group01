@@ -49,6 +49,8 @@ APPLE_COLORS = {
 }
 
 class Coin:
+    SIZE = 30
+
     def __init__(self, x, y):
         self.x = x
         self.y = y

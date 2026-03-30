@@ -1,14 +1,13 @@
 import pygame
 import random
-from config import WIDTH, HEIGHT
+from config import HEIGHT, PIPE_GAP_MAX, PIPE_GAP_MIN, WIDTH
 
 class Pipe:
     def __init__(self):
         self.x = WIDTH
         self.width = 80
-        self.gap = random.randint(120, 180)
+        self.gap = random.randint(PIPE_GAP_MIN, PIPE_GAP_MAX)
         self.top = random.randint(50, HEIGHT - 200)
-
         self.gap_y = self.top + self.gap // 2
 
     def update(self, dt, context):

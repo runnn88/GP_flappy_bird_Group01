@@ -1,4 +1,13 @@
 import pygame
+from config import (
+    GRAVITY,
+    HEIGHT,
+    MAX_SCROLL_SPEED,
+    SCROLL_SPEED,
+    SPEED_INCREASE_INTERVAL,
+    SPEED_INCREASE_STEP,
+    THEME_ROTATION_INTERVAL,
+)
 from src.core.scene_names import GAME_OVER_SCENE
 from src.scenes.base_scene import BaseScene
 from src.entities.player import Player
@@ -15,16 +24,27 @@ class GameScene(BaseScene):
 
         self.pipes = []
         self.coins = []
+        self.elapsed_time = 0
+        self.speed_interval_timer = 0
+        self.theme_cycle = ["noon", "sunset", "night", "sunrise"]
         self.game.context.score = 0
         self.game.context.is_game_over = False
+        self.game.context.gravity = GRAVITY
+        self.game.context.scroll_speed = SCROLL_SPEED
+        self.game.context.background_theme = self.theme_cycle[0]
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
+        self.elapsed_time += dt
+        self.speed_interval_timer += dt
+
+        self._update_scroll_speed()
+        self._update_background_theme()
 
         self.player.update(dt, keys, self.game.context)
         self.parallax.update(dt, self.game.context)
 
-        self.spawner.update(dt, self.pipes, self.coins)
+        self.spawner.update(dt, self.pipes, self.coins, self.game.context)
 
         for p in self.pipes:
             p.update(dt, self.game.context)
@@ -44,7 +64,7 @@ class GameScene(BaseScene):
                 self.coins.remove(c)
                 self.game.context.score += 1
 
-        if self.player.y < 0 or self.player.y > 600:
+        if self.player.y < 0 or self.player.y + 35 > HEIGHT:
             self.trigger_game_over()
 
     def draw(self, screen):
@@ -52,6 +72,26 @@ class GameScene(BaseScene):
 
     def handle_event(self, event):
         pass
+
+    def _update_scroll_speed(self):
+        if self.game.context.game_mode != "rising":
+            self.game.context.scroll_speed = SCROLL_SPEED
+            self.speed_interval_timer = 0
+            return
+
+        while (
+            self.speed_interval_timer >= SPEED_INCREASE_INTERVAL
+            and self.game.context.scroll_speed < MAX_SCROLL_SPEED
+        ):
+            self.speed_interval_timer -= SPEED_INCREASE_INTERVAL
+            self.game.context.scroll_speed = min(
+                MAX_SCROLL_SPEED,
+                self.game.context.scroll_speed + SPEED_INCREASE_STEP,
+            )
+
+    def _update_background_theme(self):
+        theme_index = int(self.elapsed_time / THEME_ROTATION_INTERVAL) % len(self.theme_cycle)
+        self.game.context.background_theme = self.theme_cycle[theme_index]
 
     def trigger_game_over(self):
         self.game.context.is_game_over = True

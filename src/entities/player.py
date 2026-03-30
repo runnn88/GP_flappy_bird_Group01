@@ -17,7 +17,7 @@ class Player:
         self.animation = Animation(frames, fps=10)
 
     def update(self, dt, keys, context):
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
             self.vel = FLAP_FORCE
 
         self.vel += context.gravity * dt
