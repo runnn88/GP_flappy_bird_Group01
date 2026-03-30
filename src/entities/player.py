@@ -10,7 +10,7 @@ class Player:
         self.vel = 0
 
         frames = [
-            load_image("assets/images/placeholder.png", (50, 35))
+            load_image("assets/images/usagi.png", (50, 35))
             for _ in range(3)
         ]
 
