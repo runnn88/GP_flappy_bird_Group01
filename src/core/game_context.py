@@ -5,3 +5,5 @@ class GameContext:
         self.scroll_speed = 200
         self.gravity = 1200
         self.background_theme = "noon"
+        self.is_speed_increasing = False
+        self.sound_enabled = True
