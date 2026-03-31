@@ -7,6 +7,7 @@ from config import WIDTH
 
 class MenuScene(BaseScene):
     def enter(self):
+        self.game.audio.play_music("menu")
         self.font = load_font("PressStart2P-Regular.ttf", 50)
         self.body_font = load_font("VT323-Regular.ttf", 50)
         center_x = WIDTH // 2

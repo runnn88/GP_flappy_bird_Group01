@@ -17,6 +17,7 @@ from src.ui.renderer import SceneRenderer
 
 class GameScene(BaseScene):
     def enter(self):
+        self.game.audio.play_music("game", restart=True)
         self.player = Player()
         self.parallax = ParallaxSystem(self.game.context.background_theme)
         self.spawner = SpawnSystem()
@@ -26,7 +27,13 @@ class GameScene(BaseScene):
         self.coins = []
         self.elapsed_time = 0
         self.speed_interval_timer = 0
-        self.theme_cycle = ["noon", "sunset", "night", "sunrise"]
+        base_theme_cycle = ["noon", "sunset", "night", "sunrise"]
+        selected_theme = self.game.context.background_theme
+        if selected_theme in base_theme_cycle:
+            start_index = base_theme_cycle.index(selected_theme)
+            self.theme_cycle = base_theme_cycle[start_index:] + base_theme_cycle[:start_index]
+        else:
+            self.theme_cycle = base_theme_cycle
         self.game.context.score = 0
         self.game.context.is_game_over = False
         self.game.context.gravity = GRAVITY
@@ -95,4 +102,5 @@ class GameScene(BaseScene):
 
     def trigger_game_over(self):
         self.game.context.is_game_over = True
+        self.game.audio.play_sfx("boom")
         self.game.state_machine.change(GAME_OVER_SCENE)
