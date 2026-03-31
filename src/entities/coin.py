@@ -22,8 +22,13 @@ class Coin:
             self.x -= context.scroll_speed * dt
         self.animation.update(dt)
 
+    def draw(self, screen):
+        frame = self.animation.get_frame()
+        screen.blit(frame, (self.x, self.y))
+
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.SIZE, self.SIZE)
+        frame = self.animation.get_frame()
+        return frame.get_rect(topleft=(self.x, self.y))
 
     def offscreen(self):
         return self.x < -self.SIZE
