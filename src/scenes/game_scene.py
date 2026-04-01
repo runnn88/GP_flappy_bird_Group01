@@ -8,7 +8,7 @@ from config import (
     SPEED_INCREASE_STEP,
     THEME_ROTATION_INTERVAL,
 )
-from src.core.scene_names import GAME_OVER_SCENE
+from src.core.scene_names import GAME_OVER_SCENE, PAUSE_SCENE
 from src.scenes.base_scene import BaseScene
 from src.entities.player import Player
 from src.systems.parallax_system import ParallaxSystem
@@ -78,7 +78,9 @@ class GameScene(BaseScene):
         self.renderer.draw_game(screen, self)
 
     def handle_event(self, event):
-        pass
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.game.state_machine.change(PAUSE_SCENE, previous_scene=self)
 
     def _update_scroll_speed(self):
         if self.game.context.game_mode != "rising":
