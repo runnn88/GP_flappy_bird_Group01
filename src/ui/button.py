@@ -49,52 +49,8 @@ class Button:
             self.rect.width * (self.scale - 1),
             self.rect.height * (self.scale - 1)
         )
-
-        # ===== COLOR =====
-        # if self.state == "pressed":
-        #     bg_color = (80, 160, 255)
-        #     border_color = (255, 255, 255)
-        #     text_color = (20, 30, 50)
-        # elif self.state == "hover":
-        #     bg_color = (30, 60, 100, 160)
-        #     border_color = (120, 200, 255)
-        #     text_color = self.hovering_color
-        # else:
-        #     bg_color = (20, 30, 50, 140)
-        #     border_color = (100, 150, 200)
-        #     text_color = self.base_color
-
-        # # ===== GLOW =====
-        # if self.state == "hover":
-        #     glow = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
-        #     pygame.draw.rect(
-        #         glow,
-        #         (100, 180, 255, 60),
-        #         glow.get_rect(),
-        #         border_radius=14
-        #     )
-        #     screen.blit(glow, scaled_rect.topleft)
-
-        # # ===== BACKGROUND =====
-        # bg_surface = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
-        # pygame.draw.rect(
-        #     bg_surface,
-        #     bg_color,
-        #     bg_surface.get_rect(),
-        #     border_radius=14
-        # )
-        # screen.blit(bg_surface, scaled_rect.topleft)
-
-        # # ===== BORDER =====
-        # pygame.draw.rect(
-        #     screen,
-        #     border_color,
-        #     scaled_rect,
-        #     2,
-        #     border_radius=14
-        # )
-
-        # screen.blit(text_surface, text_rect)
+        
+        #color
         if self.bg_color:
             current_bg = self.bg_color
             if self.state == "hover":
