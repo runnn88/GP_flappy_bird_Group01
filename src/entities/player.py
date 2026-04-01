@@ -9,14 +9,6 @@ class Player:
         self.y = 300
         self.vel = 0
 
-        # frames = [
-        #     load_image("assets/images/usagi.png", (50, 35))
-        #     for _ in range(3)
-        # ]
-
-        # self.animation = Animation(frames, fps=10)
-
-
         # load ảnh gốc trước (không scale)
         original = pygame.image.load("assets/images/usagi.png").convert_alpha()
 
