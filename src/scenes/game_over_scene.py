@@ -13,11 +13,6 @@ class GameOverScene(BaseScene):
     def enter(self):
         self.title_font = load_font("VT323-Regular.ttf", 80)
         self.text_font = load_font("VT323-Regular.ttf", 40)
-        # self.parallax = ParallaxSystem(self.game.context.background_theme)
-        # self.background_renderer = BackgroundRenderer()
-        # self.slider_dragging = False
-        
-        # self.themes = ["noon", "sunset", "night", "sunrise"]
 
         # tạo icon apple
         self.apple_icon = create_pixel_sprite(APPLE_MATRIX, 5, APPLE_COLORS)
