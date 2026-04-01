@@ -3,7 +3,7 @@ from src.utils.loader import load_font
 
 class HUD:
     def __init__(self):
-        self.font = load_font("VT323", 36)
+        self.font = load_font("VT323-Regular.ttf", 36)
 
     def draw(self, screen, context):
         score_text = self.font.render(f"Score: {context.score}", True, (255, 255, 255))
