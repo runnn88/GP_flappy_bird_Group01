@@ -2,7 +2,7 @@ import pygame
 from config import WIDTH, HEIGHT, FPS
 from src.core.audio_manager import AudioManager
 from src.core.game_context import GameContext
-from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE, SETTING_SCENE
+from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE, SETTING_SCENE, PAUSE_SCENE
 from src.core.state_machine import StateMachine
 from src.core.scene_registry import register
 
@@ -11,6 +11,7 @@ from src.scenes.menu_scene import MenuScene
 from src.scenes.game_scene import GameScene
 from src.scenes.game_over_scene import GameOverScene
 from src.scenes.setting_scene import SettingScene
+from src.scenes.pause_scene import PauseScene
 
 
 class Game:
@@ -25,6 +26,7 @@ class Game:
         register(GAME_SCENE, GameScene)
         register(GAME_OVER_SCENE, GameOverScene)
         register(SETTING_SCENE, SettingScene)
+        register(PAUSE_SCENE, PauseScene)
 
         self.state_machine = StateMachine(self)
         self.state_machine.change(MENU_SCENE)

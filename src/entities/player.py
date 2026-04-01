@@ -3,7 +3,7 @@ import random
 
 from config import FLAP_FORCE
 from src.systems.animation_system import Animation
-from src.utils.loader import load_image
+# from src.utils.loader import load_image
 
 class Player:
     def __init__(self):
@@ -11,24 +11,25 @@ class Player:
         self.y = 300
         self.vel = 0
 
-        # load ảnh gốc trước (không scale)
-        original = pygame.image.load("assets/images/usa1.png").convert_alpha()
+        self.width = 45
+        self.height = 35
+        sheet = pygame.image.load("assets/images/fat_bird.png")
+        frame_count = 5
+        frame_w = sheet.get_width() // frame_count
+        frame_h = sheet.get_height()
+        
+        self.frames = []
+        for i in range(frame_count):
+            rect = pygame.Rect(i * frame_w, 0, frame_w, frame_h)
+            image = sheet.subsurface(rect)
+            image = pygame.transform.scale(image, (self.width, self.height))
+            self.frames.append(image)
 
-        target_width = 45  # bạn muốn rộng bao nhiêu thì chỉnh ở đây
+        self.idle_anim = Animation([self.frames[0]], fps=1)
+        self.flap_anim = Animation(self.frames, fps=15)
 
-        # giữ tỉ lệ
-        ratio = target_width / original.get_width()
-        target_height = int(original.get_height() * ratio)
-
-        scaled = pygame.transform.scale(original, (target_width, target_height))
-
-        frames = [scaled for _ in range(3)]
-
-        self.animation = Animation(frames, fps=10)
-
-        # lưu size thật để dùng rect
-        self.width = target_width
-        self.height = target_height
+        self.animation = self.idle_anim
+        
 
         # frame = self.animation.get_frame()
 
@@ -50,6 +51,11 @@ class Player:
 
         self.vel += context.gravity * dt
         self.y += self.vel * dt
+        
+        if self.vel < 0: #flapping
+            self.animation = self.flap_anim
+        else: 
+            self.animation = self.idle_anim
 
         self.animation.update(dt)
 
