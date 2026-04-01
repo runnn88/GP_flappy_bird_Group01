@@ -7,3 +7,6 @@ class GameContext:
         self.background_theme = "noon"
         self.is_speed_increasing = False
         self.sound_enabled = True
+        self.music_volume = 0.4
+        self.game_mode = "rising"
+        self.pipes_move_vertically = False
