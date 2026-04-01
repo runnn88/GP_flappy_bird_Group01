@@ -3,6 +3,7 @@ from src.core.scene_names import MENU_SCENE
 from src.scenes.base_scene import BaseScene
 from src.systems.parallax_system import ParallaxSystem
 from src.ui.button import Button
+from src.ui.toggle_switch import ToggleSwitch
 from src.ui.background_renderer import BackgroundRenderer
 from src.utils.loader import load_font
 from config import WIDTH 
@@ -10,56 +11,77 @@ from config import WIDTH
 class SettingScene(BaseScene):
     def enter(self):
         self.game.audio.play_music("menu")
-        self.font = load_font("VT323-Regular.ttf", 48)
-        self.title_font = load_font("PressStart2P-Regular.ttf", 50)
+        
+        self.title_font = load_font("PressStart2P-Regular.ttf", 60)
+        self.label_font = load_font("VT323-Regular.ttf", 54)
+        self.theme_btn_font = load_font("VT323-Regular.ttf", 36)
+        self.percent_font = load_font("VT323-Regular.ttf", 36)
+        self.back_btn_font = load_font("VT323-Regular.ttf", 48)
+        
         self.parallax = ParallaxSystem(self.game.context.background_theme)
         self.background_renderer = BackgroundRenderer()
         self.slider_dragging = False
         
         self.themes = ["noon", "sunset", "night", "sunrise"]
         self.buttons = []
-        center_x = WIDTH // 2
-
-        mode_text = self._mode_text()
-        self.mode_btn = Button(
-            image=None, pos=(center_x, 170), font=self.font,
-            base_color=(200, 200, 200), hovering_color=(255, 255, 0),
-            text_input=mode_text, callback=self.toggle_mode
+        self.toggles = []
+        
+        self.label_color = (186, 136, 218) # #BA88DA
+        self.theme_text_color = (255, 246, 213) # #FFF6D5
+        self.btn_bg_color = (132, 213, 242) # #84D5F2
+        self.volume_base_color = (209, 222, 227) # #D1DEE3
+        self.back_bg_color = (249, 133, 183) # #F985B7
+    
+        toggle_w = 109
+        toggle_h = 44
+        toggle_x = 587
+        
+        # Endless rush mode 
+        initial_mode = self.game.context.game_mode == "rising"
+        self.mode_toggle = ToggleSwitch(
+            x=toggle_x, y=147, width=toggle_w, height=toggle_h,
+            initial_state=initial_mode, callback=self.toggle_mode
         )
-        self.buttons.append(self.mode_btn)
-
-        theme_text = f"Theme: {self.game.context.background_theme.capitalize()}"
+        self.toggles.append(self.mode_toggle)
+        
+        # Theme
+        theme_text = self.game.context.background_theme.upper()
         self.theme_btn = Button(
-            image=None, pos=(center_x, 260), font=self.font,
-            base_color=(200, 200, 200), hovering_color=(255, 255, 0),
-            text_input=theme_text, callback=self.cycle_theme
+            image=None, pos=(566,229), font=self.theme_btn_font,
+            base_color=self.theme_text_color, hovering_color=self.theme_text_color,
+            text_input=theme_text, callback=self.cycle_theme,
+            bg_color=self.btn_bg_color, border_radius=20, size=(130,48)
         )
         self.buttons.append(self.theme_btn)
 
-        pipe_motion_text = self._pipe_motion_text()
-        self.pipe_motion_btn = Button(
-            image=None, pos=(center_x, 350), font=self.font,
-            base_color=(200, 200, 200), hovering_color=(255, 255, 0),
-            text_input=pipe_motion_text, callback=self.toggle_pipe_motion
+        # Dynamic Obstacle 
+        self.pipe_motion_toggle = ToggleSwitch(
+            x=toggle_x, y=319, width=toggle_w, height=toggle_h,
+            initial_state=self.game.context.pipes_move_vertically, callback=self.toggle_pipe_motion
         )
-        self.buttons.append(self.pipe_motion_btn)
+        self.toggles.append(self.pipe_motion_toggle)
 
-        self.volume_label = self.font.render("Music Volume", True, (220, 220, 220))
-        self.volume_label_rect = self.volume_label.get_rect(center=(center_x, 450))
-        self.slider_rect = pygame.Rect(center_x - 95, 480, 190, 10)
-        self.slider_hit_rect = pygame.Rect(center_x - 120, 464, 240, 42)
-        self.speaker_hit_rect = pygame.Rect(self.slider_rect.left - 80, self.slider_rect.centery - 24, 52, 48)
+        # Volume
+        self.slider_rect = pygame.Rect(444, 426, 172, 12) 
+        self.slider_hit_rect = pygame.Rect(430, 400, 200, 50)
+        self.speaker_hit_rect = pygame.Rect(450, 380, 50, 60)
 
+        # Back 
         self.back_btn = Button(
-            image=None, pos=(center_x, 555), font=self.font,
-            base_color=(255, 100, 100), hovering_color=(255, 0, 0),
-            text_input="Back to Menu", callback=self.go_back
+            image=None, pos=(315, 470), font=self.back_btn_font,
+            base_color=self.theme_text_color, hovering_color=self.theme_text_color,
+            text_input="Back", callback=self.go_back,
+            bg_color=self.back_bg_color, border_radius=20, size=(170,66)
         )
         self.buttons.append(self.back_btn)
 
-    def toggle_mode(self):
-        self.game.context.game_mode = "steady" if self.game.context.game_mode == "rising" else "rising"
-        self._update_btn_text(self.mode_btn, self._mode_text())
+        self.lbl_mode = self.label_font.render("Endless rush", True, self.label_color)
+        self.lbl_theme = self.label_font.render("Theme", True, self.label_color)
+        self.lbl_pipe = self.label_font.render("Dynamic Obstacles", True, self.label_color)
+        self.lbl_vol = self.label_font.render("Volume", True, self.label_color)
+
+    def toggle_mode(self, new_state):
+        self.game.context.game_mode = "rising" if new_state else "steady"
 
     def cycle_theme(self):
         current_idx = self.themes.index(self.game.context.background_theme)
@@ -67,12 +89,11 @@ class SettingScene(BaseScene):
         self.game.context.background_theme = self.themes[next_idx]
         self.parallax.set_theme(self.game.context.background_theme)
         
-        new_text = f"Theme: {self.game.context.background_theme.capitalize()}"
+        new_text = self.game.context.background_theme.upper()
         self._update_btn_text(self.theme_btn, new_text)
 
-    def toggle_pipe_motion(self):
-        self.game.context.pipes_move_vertically = not self.game.context.pipes_move_vertically
-        self._update_btn_text(self.pipe_motion_btn, self._pipe_motion_text())
+    def toggle_pipe_motion(self, new_state):
+        self.game.context.pipes_move_vertically = new_state
 
     def toggle_sound(self):
         enabled = not self.game.context.sound_enabled
@@ -81,16 +102,9 @@ class SettingScene(BaseScene):
     def go_back(self):
         self.game.state_machine.change(MENU_SCENE)
 
-    def _mode_text(self):
-        return "Mode: Rising Speed" if self.game.context.game_mode == "rising" else "Mode: Normal Speed"
-
-    def _pipe_motion_text(self):
-        return "Moving Pipes: ON" if self.game.context.pipes_move_vertically else "Moving Pipes: OFF"
-
     def _update_btn_text(self, btn, text):
         btn.text_input = text
         btn.text = btn.font.render(text, True, btn.base_color)
-        btn.rect = btn.text.get_rect(center=(btn.x_pos, btn.y_pos))
         btn.text_rect = btn.text.get_rect(center=(btn.x_pos, btn.y_pos))
 
     def _slider_knob_center_x(self):
@@ -98,61 +112,58 @@ class SettingScene(BaseScene):
 
     def _set_volume_from_mouse(self, mouse_x):
         volume = (mouse_x - self.slider_rect.left) / self.slider_rect.width
+        volume = max(0.0, min(1.0, volume)) 
         self.game.audio.set_music_volume(volume)
 
     def _draw_volume_control(self, screen):
-        speaker_color = (255, 232, 143) if self.game.context.sound_enabled else (145, 145, 145)
-        muted_color = (240, 110, 110)
-        icon_x = self.slider_rect.left - 55
-        icon_y = self.slider_rect.centery
-
-        body_points = [
-            (icon_x - 10, icon_y - 10),
-            (icon_x - 2, icon_y - 10),
-            (icon_x + 8, icon_y - 18),
-            (icon_x + 8, icon_y + 18),
-            (icon_x - 2, icon_y + 10),
-            (icon_x - 10, icon_y + 10),
-        ]
-        pygame.draw.polygon(screen, speaker_color, body_points)
-
-        if self.game.context.sound_enabled:
-            for radius in (14, 22):
-                arc_rect = pygame.Rect(icon_x - 2, icon_y - radius, radius * 2, radius * 2)
-                pygame.draw.arc(screen, speaker_color, arc_rect, -0.8, 0.8, 3)
-        else:
-            pygame.draw.line(screen, muted_color, (icon_x + 10, icon_y - 12), (icon_x + 26, icon_y + 12), 4)
-            pygame.draw.line(screen, muted_color, (icon_x + 26, icon_y - 12), (icon_x + 10, icon_y + 12), 4)
-
-        pygame.draw.rect(screen, (68, 72, 86), self.slider_rect, border_radius=5)
+        slider_base_color = self.volume_base_color # #D1DEE3 
+        slider_fill_color = self.btn_bg_color # #84D5F2 
+       
+        pygame.draw.rect(screen, slider_base_color, self.slider_rect, border_radius=6)
+        
+        # Fill up slider
         fill_width = max(0, int(self.slider_rect.width * self.game.context.music_volume))
         if fill_width > 0:
             fill_rect = pygame.Rect(self.slider_rect.left, self.slider_rect.top, fill_width, self.slider_rect.height)
-            pygame.draw.rect(screen, (255, 211, 97), fill_rect, border_radius=5)
-        pygame.draw.rect(screen, (255, 247, 214), self.slider_rect, 2, border_radius=5)
+            pygame.draw.rect(screen, slider_fill_color, fill_rect, border_radius=6) 
 
+        # Knob
         knob_center = (int(self._slider_knob_center_x()), self.slider_rect.centery)
-        pygame.draw.circle(screen, (255, 252, 239), knob_center, 11)
-        pygame.draw.circle(screen, (160, 120, 35), knob_center, 11, 2)
+        pygame.draw.circle(screen, (255, 255, 255), knob_center, 11)
 
-        percent_text = self.font.render(f"{int(self.game.context.music_volume * 100)}%", True, (250, 250, 250))
-        percent_rect = percent_text.get_rect(midleft=(self.slider_rect.right + 16, self.slider_rect.centery))
-        screen.blit(self.volume_label, self.volume_label_rect)
-        screen.blit(percent_text, percent_rect)
+        # Percentage
+        percent_str = f"{int(self.game.context.music_volume * 100)}%"
+        percent_text = self.percent_font.render(percent_str, True, slider_fill_color)
+        screen.blit(percent_text, (652, 414))
 
     def update(self, dt):
         self.parallax.update(dt, self.game.context)
         for btn in self.buttons:
             btn.update(dt)
+        for toggle in self.toggles:
+            toggle.update(dt)
 
     def draw(self, screen):
         self.background_renderer.draw(screen, self.parallax)
         
-        title = self.title_font.render("SETTINGS", True, (255, 255, 255))
-        screen.blit(title, title.get_rect(center=(WIDTH // 2, 80)))
+        overlay = pygame.Surface((699, 527), pygame.SRCALPHA) # rgba(255, 242, 208, 0.71) 
+        pygame.draw.rect(overlay, (255, 242, 208, 180), overlay.get_rect(), border_radius=25)
+        screen.blit(overlay, (54, 37))
+        
+        title = self.title_font.render("SETTINGS", True, (182, 61, 169)) # #B63DA9
+        screen.blit(title, (168, 64))
+
+        screen.blit(self.lbl_mode, (104, 142))
+        screen.blit(self.lbl_theme, (104, 228))
+        screen.blit(self.lbl_pipe, (104, 314))
+        screen.blit(self.lbl_vol, (104, 400))
 
         for btn in self.buttons:
             btn.draw(screen)
+            
+        for toggle in self.toggles:
+            toggle.draw(screen)
+            
         self._draw_volume_control(screen)
 
     def handle_event(self, event):
@@ -160,15 +171,22 @@ class SettingScene(BaseScene):
             if self.speaker_hit_rect.collidepoint(event.pos):
                 self.toggle_sound()
                 return
-            if self.slider_hit_rect.collidepoint(event.pos):
+            if pygame.Rect(500, 380, 220, 60).collidepoint(event.pos): # slider_hit_rect
                 self.slider_dragging = True
-                self._set_volume_from_mouse(event.pos[0])
+                vol = (event.pos[0] - self.slider_rect.left) / self.slider_rect.width
+                vol = max(0.0, min(1.0, vol))
+                self.game.audio.set_music_volume(vol)
 
         if event.type == pygame.MOUSEMOTION and self.slider_dragging:
-            self._set_volume_from_mouse(event.pos[0])
+            vol = (event.pos[0] - self.slider_rect.left) / self.slider_rect.width
+            vol = max(0.0, min(1.0, vol))
+            self.game.audio.set_music_volume(vol)
 
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.slider_dragging = False
 
         for btn in self.buttons:
             btn.handle_event(event)
+        
+        for toggle in self.toggles:
+            toggle.handle_event(event)
