@@ -26,10 +26,10 @@ class MenuScene(BaseScene):
                                base_color=(255, 246, 213), hovering_color=(182, 61, 169),
                                text_input="Play Game", callback=self.start_game,
                                bg_color=(249, 133, 183), border_radius=14, size=(250, 70))
-        self.setting_btn = Button(image=None, pos=(280, 400), font=self.body_font,
+        self.setting_btn = Button(image=None, pos=(270, 400), font=self.body_font,
                                 base_color=(255, 246, 213), hovering_color=(137,49,196),
                                 text_input="Settings", callback=self.open_settings,
-                                bg_color=(186, 136, 218), border_radius=14, size=(240, 70))
+                                bg_color=(186, 136, 218), border_radius=14, size=(250, 70))
 
     def start_game(self):
         self.game.state_machine.change(GAME_SCENE)

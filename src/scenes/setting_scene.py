@@ -36,7 +36,7 @@ class SettingScene(BaseScene):
         toggle_h = 44
         toggle_x = 587
         
-        # Endless rush mode 
+        # mode 
         initial_mode = self.game.context.game_mode == "rising"
         self.mode_toggle = ToggleSwitch(
             x=toggle_x, y=147, width=toggle_w, height=toggle_h,
@@ -75,7 +75,7 @@ class SettingScene(BaseScene):
         )
         self.buttons.append(self.back_btn)
 
-        self.lbl_mode = self.label_font.render("Endless rush", True, self.label_color)
+        self.lbl_mode = self.label_font.render("Difficulty Scaling", True, self.label_color)
         self.lbl_theme = self.label_font.render("Theme", True, self.label_color)
         self.lbl_pipe = self.label_font.render("Dynamic Obstacles", True, self.label_color)
         self.lbl_vol = self.label_font.render("Volume", True, self.label_color)

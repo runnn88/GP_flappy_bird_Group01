@@ -11,8 +11,8 @@ class Player:
         self.y = 300
         self.vel = 0
 
-        self.width = 45
-        self.height = 35
+        self.width = 50
+        self.height = 50
         sheet = pygame.image.load("assets/images/fat_bird.png")
         frame_count = 5
         frame_w = sheet.get_width() // frame_count
