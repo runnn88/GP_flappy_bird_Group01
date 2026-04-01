@@ -2,14 +2,20 @@ import pygame
 from src.core.scene_names import GAME_SCENE, SETTING_SCENE
 from src.scenes.base_scene import BaseScene
 from src.ui.button import Button
-from src.utils.loader import load_font
+from src.utils.loader import load_font, load_image
 from config import WIDTH
 
 class MenuScene(BaseScene):
     def enter(self):
+        self.background_1 = load_image("assets/images/backgrounds/night/1.png", (WIDTH, 600))
+        self.background_2 = load_image("assets/images/backgrounds/night/2.png", (WIDTH, 600))
+        self.background_3 = load_image("assets/images/backgrounds/night/3.png", (WIDTH, 600))
+        self.background_4 = load_image("assets/images/backgrounds/night/4.png", (WIDTH, 600))
+
         self.font = load_font("PressStart2P-Regular.ttf", 50)
         self.body_font = load_font("VT323-Regular.ttf", 50)
         center_x = WIDTH // 2
+
         self.play_btn = Button(image=None, pos=(center_x, 300), font=self.body_font, 
                                base_color=(200,200,200), hovering_color=(0,255,0),
                                text_input="PLay Game", callback=self.start_game)
@@ -29,8 +35,13 @@ class MenuScene(BaseScene):
 
     def draw(self, screen):
         screen.fill((0, 0, 0))
+        screen.blit(self.background_1, (0, 0))
+        screen.blit(self.background_2, (0, 0))
+        screen.blit(self.background_3, (0, 0))
+        screen.blit(self.background_4, (0, 0))
 
-        title = self.font.render("INFINITE FLYER", True, (255,255,255))
+
+        title = self.font.render("HUNGRY CHIKAWA", True, (255,255,255))
         screen.blit(title, title.get_rect(center=(WIDTH // 2, 150)))
         
         self.play_btn.draw(screen)
