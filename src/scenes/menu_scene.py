@@ -21,14 +21,15 @@ class MenuScene(BaseScene):
         
         self.themes = ["noon", "sunset", "night", "sunrise"]
 
-        center_x = WIDTH // 2
 
-        self.play_btn = Button(image=None, pos=(center_x, 300), font=self.body_font, 
-                               base_color=(180, 255, 180), hovering_color=(0,255,120),
-                               text_input="Play Game", callback=self.start_game)
-        self.setting_btn = Button(image=None, pos=(center_x, 400), font=self.body_font,
-                                base_color=(255, 230, 150), hovering_color=(255, 200, 50),
-                                text_input="Settings", callback=self.open_settings)
+        self.play_btn = Button(image=None, pos=(270, 300), font=self.body_font, 
+                               base_color=(255, 246, 213), hovering_color=(182, 61, 169),
+                               text_input="Play Game", callback=self.start_game,
+                               bg_color=(249, 133, 183), border_radius=14, size=(250, 70))
+        self.setting_btn = Button(image=None, pos=(280, 400), font=self.body_font,
+                                base_color=(255, 246, 213), hovering_color=(137,49,196),
+                                text_input="Settings", callback=self.open_settings,
+                                bg_color=(186, 136, 218), border_radius=14, size=(240, 70))
 
     def start_game(self):
         self.game.state_machine.change(GAME_SCENE)

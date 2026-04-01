@@ -21,33 +21,15 @@ class Button:
 
         # ===== TEXT =====
         self.text = self.font.render(self.text_input, True, self.base_color)
-
-        self.padding_x = 60
-        self.padding_y = 30
-
-        if self.image is None:
-            self.rect = pygame.Rect(
-                0, 0,
-                self.text.get_width() + self.padding_x,
-                self.text.get_height() + self.padding_y
-            )
-            self.rect.center = (self.x_pos, self.y_pos)
+        if size is not None:
+            self.rect = pygame.Rect(self.x_pos, self.y_pos, size[0], size[1])
+        elif self.image is None: 
+            self.rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
         else:
             self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
 
-    def set_text(self, text):
-        self.text_input = text
-        self.text = self.font.render(self.text_input, True, self.base_color)
-        if self.image is None:
-            self.rect.size = (
-                self.text.get_width() + self.padding_x,
-                self.text.get_height() + self.padding_y,
-            )
-            self.rect.center = (self.x_pos, self.y_pos)
-
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
-        # self.is_hovering = self.rect.collidepoint(mouse_pos)
 
         if self.rect.collidepoint(mouse_pos):
             if self.state != "pressed":
@@ -69,53 +51,68 @@ class Button:
         )
 
         # ===== COLOR =====
-        if self.state == "pressed":
-            bg_color = (80, 160, 255)
-            border_color = (255, 255, 255)
-            text_color = (20, 30, 50)
-        elif self.state == "hover":
-            bg_color = (30, 60, 100, 160)
-            border_color = (120, 200, 255)
-            text_color = self.hovering_color
-        else:
-            bg_color = (20, 30, 50, 140)
-            border_color = (100, 150, 200)
-            text_color = self.base_color
+        # if self.state == "pressed":
+        #     bg_color = (80, 160, 255)
+        #     border_color = (255, 255, 255)
+        #     text_color = (20, 30, 50)
+        # elif self.state == "hover":
+        #     bg_color = (30, 60, 100, 160)
+        #     border_color = (120, 200, 255)
+        #     text_color = self.hovering_color
+        # else:
+        #     bg_color = (20, 30, 50, 140)
+        #     border_color = (100, 150, 200)
+        #     text_color = self.base_color
 
-        # ===== GLOW =====
-        if self.state == "hover":
-            glow = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
-            pygame.draw.rect(
-                glow,
-                (100, 180, 255, 60),
-                glow.get_rect(),
-                border_radius=14
-            )
-            screen.blit(glow, scaled_rect.topleft)
+        # # ===== GLOW =====
+        # if self.state == "hover":
+        #     glow = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
+        #     pygame.draw.rect(
+        #         glow,
+        #         (100, 180, 255, 60),
+        #         glow.get_rect(),
+        #         border_radius=14
+        #     )
+        #     screen.blit(glow, scaled_rect.topleft)
 
-        # ===== BACKGROUND =====
-        bg_surface = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
-        pygame.draw.rect(
-            bg_surface,
-            bg_color,
-            bg_surface.get_rect(),
-            border_radius=14
-        )
-        screen.blit(bg_surface, scaled_rect.topleft)
+        # # ===== BACKGROUND =====
+        # bg_surface = pygame.Surface(scaled_rect.size, pygame.SRCALPHA)
+        # pygame.draw.rect(
+        #     bg_surface,
+        #     bg_color,
+        #     bg_surface.get_rect(),
+        #     border_radius=14
+        # )
+        # screen.blit(bg_surface, scaled_rect.topleft)
 
-        # ===== BORDER =====
-        pygame.draw.rect(
-            screen,
-            border_color,
-            scaled_rect,
-            2,
-            border_radius=14
-        )
+        # # ===== BORDER =====
+        # pygame.draw.rect(
+        #     screen,
+        #     border_color,
+        #     scaled_rect,
+        #     2,
+        #     border_radius=14
+        # )
 
-        # ===== TEXT =====
-        text_surface = self.font.render(self.text_input, True, text_color)
+        # screen.blit(text_surface, text_rect)
+        if self.bg_color:
+            current_bg = self.bg_color
+            if self.state == "hover":
+                current_bg = (min(self.bg_color[0]+20, 255), min(self.bg_color[1]+20, 255), min(self.bg_color[2]+20, 255))
+            elif self.state == "pressed":
+                current_bg = (max(self.bg_color[0]-20, 0), max(self.bg_color[1]-20, 0), max(self.bg_color[2]-20, 0))
+                
+            pygame.draw.rect(screen, current_bg, scaled_rect, border_radius=self.border_radius)
+        
+        # image 
+        if self.image is not None:
+            scaled_img = pygame.transform.scale(self.image, (int(self.image.get_width() * self.scale), int(self.image.get_height() * self.scale)))
+            screen.blit(scaled_img, scaled_img.get_rect(center=scaled_rect.center))
+            
+        # Text
+        current_text_color = self.hovering_color if self.state == "hover" else self.base_color
+        text_surface = self.font.render(self.text_input, True, current_text_color)
         text_rect = text_surface.get_rect(center=scaled_rect.center)
-
         screen.blit(text_surface, text_rect)
 
     def handle_event(self, event):
