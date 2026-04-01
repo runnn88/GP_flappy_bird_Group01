@@ -1,10 +1,11 @@
 import pygame
 from src.core.scene_names import GAME_SCENE, MENU_SCENE
 from src.scenes.base_scene import BaseScene
+from src.utils.loader import load_font
 
 class GameOverScene(BaseScene):
     def enter(self):
-        self.font = pygame.font.SysFont(None, 60)
+        self.font = load_font("VT323-Regular.ttf", 60) 
 
     def update(self, dt):
         pass

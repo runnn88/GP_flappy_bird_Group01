@@ -12,6 +12,7 @@ class MenuScene(BaseScene):
         self.background_3 = load_image("assets/images/backgrounds/night/3.png", (WIDTH, 600))
         self.background_4 = load_image("assets/images/backgrounds/night/4.png", (WIDTH, 600))
 
+        self.game.audio.play_music("menu")
         self.font = load_font("PressStart2P-Regular.ttf", 50)
         self.body_font = load_font("VT323-Regular.ttf", 50)
         center_x = WIDTH // 2

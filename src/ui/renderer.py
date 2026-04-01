@@ -15,7 +15,7 @@ class SceneRenderer:
 
     def draw_game(self, screen, game_scene):
         self.background.draw(screen, game_scene.parallax)
-        self.pipes.draw(screen, game_scene.pipes)
+        self.pipes.draw(screen, game_scene.pipes, game_scene.game.context.background_theme)
         self.coins.draw(screen, game_scene.coins)
         self.player.draw(screen, game_scene.player)
         self.hud.draw(screen, game_scene.game.context)

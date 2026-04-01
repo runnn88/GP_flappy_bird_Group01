@@ -1,5 +1,6 @@
 import pygame
 from config import WIDTH, HEIGHT, FPS
+from src.core.audio_manager import AudioManager
 from src.core.game_context import GameContext
 from src.core.scene_names import GAME_OVER_SCENE, GAME_SCENE, MENU_SCENE, SETTING_SCENE
 from src.core.state_machine import StateMachine
@@ -18,6 +19,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.context = GameContext()
+        self.audio = AudioManager(self.context)
 
         register(MENU_SCENE, MenuScene)
         register(GAME_SCENE, GameScene)
