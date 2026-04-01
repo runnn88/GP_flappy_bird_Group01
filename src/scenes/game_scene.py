@@ -71,7 +71,7 @@ class GameScene(BaseScene):
                 self.coins.remove(c)
                 self.game.context.score += 1
 
-        if self.player.y < 0 or self.player.y + 35 > HEIGHT:
+        if self.player.y < 0 or self.player.y + 50 > HEIGHT:
             self.trigger_game_over()
 
     def draw(self, screen):
