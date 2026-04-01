@@ -10,7 +10,7 @@ class Player:
         self.vel = 0
 
         # load ảnh gốc trước (không scale)
-        original = pygame.image.load("assets/images/usagi.png").convert_alpha()
+        original = pygame.image.load("assets/images/usa1.png").convert_alpha()
 
         target_width = 45  # bạn muốn rộng bao nhiêu thì chỉnh ở đây
 
