@@ -2,19 +2,28 @@ import pygame
 from src.core.scene_names import GAME_SCENE, SETTING_SCENE
 from src.scenes.base_scene import BaseScene
 from src.ui.button import Button
+from src.systems.parallax_system import ParallaxSystem
+from src.ui.background_renderer import BackgroundRenderer
 from src.utils.loader import load_font, load_image
 from config import WIDTH
 
 class MenuScene(BaseScene):
     def enter(self):
-        self.background_1 = load_image("assets/images/backgrounds/night/1.png", (WIDTH, 600))
-        self.background_2 = load_image("assets/images/backgrounds/night/2.png", (WIDTH, 600))
-        self.background_3 = load_image("assets/images/backgrounds/night/3.png", (WIDTH, 600))
-        self.background_4 = load_image("assets/images/backgrounds/night/4.png", (WIDTH, 600))
+        # self.background_1 = load_image("assets/images/backgrounds/night/1.png", (WIDTH, 600))
+        # self.background_2 = load_image("assets/images/backgrounds/night/2.png", (WIDTH, 600))
+        # self.background_3 = load_image("assets/images/backgrounds/night/3.png", (WIDTH, 600))
+        # self.background_4 = load_image("assets/images/backgrounds/night/4.png", (WIDTH, 600))
 
         self.game.audio.play_music("menu")
         self.font = load_font("PressStart2P-Regular.ttf", 50)
         self.body_font = load_font("VT323-Regular.ttf", 50)
+
+        self.parallax = ParallaxSystem(self.game.context.background_theme)
+        self.background_renderer = BackgroundRenderer()
+        self.slider_dragging = False
+        
+        self.themes = ["noon", "sunset", "night", "sunrise"]
+
         center_x = WIDTH // 2
 
         self.play_btn = Button(image=None, pos=(center_x, 300), font=self.body_font, 
@@ -31,16 +40,17 @@ class MenuScene(BaseScene):
         self.game.state_machine.change(SETTING_SCENE)
         
     def update(self, dt):
+        self.parallax.update(dt, self.game.context)
         self.play_btn.update(dt)
         self.setting_btn.update(dt)
 
     def draw(self, screen):
-        screen.fill((0, 0, 0))
-        screen.blit(self.background_1, (0, 0))
-        screen.blit(self.background_2, (0, 0))
-        screen.blit(self.background_3, (0, 0))
-        screen.blit(self.background_4, (0, 0))
-
+        # screen.fill((0, 0, 0))
+        # screen.blit(self.background_1, (0, 0))
+        # screen.blit(self.background_2, (0, 0))
+        # screen.blit(self.background_3, (0, 0))
+        # screen.blit(self.background_4, (0, 0))
+        self.background_renderer.draw(screen, self.parallax)
 
         title = self.font.render("HUNGRY CHIKAWA", True, (255,255,255))
         screen.blit(title, title.get_rect(center=(WIDTH // 2, 150)))
