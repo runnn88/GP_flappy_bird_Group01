@@ -3,6 +3,7 @@ import random
 from config import MAX_OBSTACLE_SPACING, MAX_SCROLL_SPEED, OBSTACLE_SPACING, PIPE_COIN_CLEARANCE, SCROLL_SPEED
 from src.entities.pipe import Pipe
 from src.entities.coin import Coin
+from src.entities.yellow_apple import YellowApple
 
 class SpawnSystem:
     def __init__(self):
@@ -17,7 +18,8 @@ class SpawnSystem:
             pipe = Pipe()
             previous_pipe = pipes[-1] if pipes else None
             pipes.append(pipe)
-            coins.append(self._spawn_coin(pipe))
+            coins.append(self._spawn_coin(pipe, spawn_flip_apple=context.pending_flip_apple))
+            context.pending_flip_apple = False
             if previous_pipe is not None:
                 bridge_coin = self._spawn_between_pairs_coin(previous_pipe, pipe)
                 if bridge_coin is not None:
@@ -36,10 +38,11 @@ class SpawnSystem:
         spacing_range = MAX_OBSTACLE_SPACING - OBSTACLE_SPACING
         return OBSTACLE_SPACING + (spacing_range * speed_progress)
 
-    def _spawn_coin(self, pipe):
+    def _spawn_coin(self, pipe, spawn_flip_apple=False):
         orb_x = pipe.x + (pipe.width - Coin.SIZE) / 2
         orb_y = pipe.top + (pipe.gap - Coin.SIZE) / 2
-        return Coin(orb_x, orb_y, anchor_pipe=pipe)
+        coin_cls = YellowApple if spawn_flip_apple else Coin
+        return coin_cls(orb_x, orb_y, anchor_pipe=pipe)
 
     def _spawn_between_pairs_coin(self, left_pipe, right_pipe):
         left_center_x = left_pipe.x + (left_pipe.width / 2)

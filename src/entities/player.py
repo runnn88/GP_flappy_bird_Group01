@@ -46,13 +46,16 @@ class Player:
         self.particles = []
 
     def update(self, dt, keys, context):
+        flap_force = -FLAP_FORCE if context.is_flipped else FLAP_FORCE
+
         if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
-            self.vel = FLAP_FORCE
+            self.vel = flap_force
 
         self.vel += context.gravity * dt
         self.y += self.vel * dt
         
-        if self.vel < 0: #flapping
+        is_flapping = self.vel > 0 if context.is_flipped else self.vel < 0
+        if is_flapping: #flapping
             self.animation = self.flap_anim
         else: 
             self.animation = self.idle_anim

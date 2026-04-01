@@ -15,11 +15,13 @@ RAINBOW_COLORS = [
 
 
 class PlayerRenderer:
-    def draw(self, screen, player):
+    def draw(self, screen, player, context):
         self._draw_rainbow(screen, player.trail)
         self._draw_particles(screen, player.particles)
 
         frame = player.animation.get_frame()
+        if context.is_flipped:
+            frame = pygame.transform.flip(frame, False, True)
         screen.blit(frame, (player.x, player.y))
 
     def _draw_rainbow(self, screen, trail):

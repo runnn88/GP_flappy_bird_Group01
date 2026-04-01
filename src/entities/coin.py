@@ -44,6 +44,9 @@ APPLE_COLORS = {
 
 class Coin:
     SIZE = 32
+    FPS = 12
+    GLOW_COLOR = (255, 80, 80, 80)
+    PIXEL_COLORS = APPLE_COLORS
     _cached_frames = None
 
     def __init__(self, x, y, anchor_pipe=None):
@@ -51,10 +54,10 @@ class Coin:
         self.y = y
         self.anchor_pipe = anchor_pipe
 
-        if Coin._cached_frames is None:
-            Coin._cached_frames = self._build_frames()
+        if self.__class__._cached_frames is None:
+            self.__class__._cached_frames = self._build_frames()
 
-        self.animation = Animation(Coin._cached_frames, fps=12)
+        self.animation = Animation(self.__class__._cached_frames, fps=self.FPS)
         self._sync_position()
 
     def update(self, dt, context):
@@ -76,6 +79,9 @@ class Coin:
     def offscreen(self):
         return self.x < -self.SIZE
 
+    def is_flip_apple(self):
+        return False
+
     def _sync_position(self):
         if self.anchor_pipe is not None:
             self.x = self.anchor_pipe.x + ((self.anchor_pipe.width - self.SIZE) / 2)
@@ -85,11 +91,11 @@ class Coin:
             self.y = max(min_y, min(max_y, centered_y))
 
     def _build_frames(self):
-        base = create_pixel_sprite(APPLE_MATRIX, 4, APPLE_COLORS)
+        base = create_pixel_sprite(APPLE_MATRIX, 4, self.PIXEL_COLORS)
         base = pygame.transform.scale(base, (self.SIZE, self.SIZE))
 
         glow = pygame.Surface((self.SIZE, self.SIZE), pygame.SRCALPHA)
-        pygame.draw.ellipse(glow, (255, 80, 80, 80), (0, 0, self.SIZE, self.SIZE))
+        pygame.draw.ellipse(glow, self.GLOW_COLOR, (0, 0, self.SIZE, self.SIZE))
 
         widths = [32, 26, 20, 14, 20, 26, 32]
         frames = []
