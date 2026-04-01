@@ -70,6 +70,7 @@ class GameScene(BaseScene):
             if self.player.rect().colliderect(c.rect()):
                 self.coins.remove(c)
                 self.game.context.score += 1
+                self.game.audio.play_sfx("point")
 
         if self.player.y < 0 or self.player.y + 50 > HEIGHT:
             self.trigger_game_over()

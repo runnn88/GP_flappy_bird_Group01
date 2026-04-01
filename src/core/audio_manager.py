@@ -118,9 +118,17 @@ class AudioManager:
         return tracks
 
     def _load_sfx(self):
-        return {
+        sfx = {
             "boom": self._build_boom_sfx(),
         }
+        audio_root = Path("assets/audio")
+        point_path = audio_root / "point.ogg"
+        if point_path.exists():
+            sfx["point"] = pygame.mixer.Sound(str(point_path))
+        else:
+            sfx["point"] = self._build_point_sfx()
+            
+        return sfx
 
     def _load_file_or_fallback(self, path, melody, beat_seconds, start=0.0):
         fallback_sound = self._build_music_loop(melody, beat_seconds)
@@ -169,6 +177,23 @@ class AudioManager:
             rumble = math.sin(2 * math.pi * (frequency * 0.45) * t)
             noise = math.sin(2 * math.pi * (37 + (index % 17)) * t)
             value = int(max_amplitude * envelope * (0.22 * tone + 0.14 * rumble + 0.06 * noise))
+            samples.append(value)
+
+        return pygame.mixer.Sound(buffer=samples.tobytes())
+    
+    def _build_point_sfx(self):
+        sample_rate = 22050
+        duration = 0.15 
+        total_samples = int(sample_rate * duration)
+        samples = array("h")
+        max_amplitude = 32767
+
+        for index in range(total_samples):
+            t = index / sample_rate
+            envelope = max(0.0, 1.0 - (index / total_samples))
+            frequency = 1046.50
+            tone = math.sin(2 * math.pi * frequency * t)
+            value = int(max_amplitude * 0.3 * envelope * tone)
             samples.append(value)
 
         return pygame.mixer.Sound(buffer=samples.tobytes())
