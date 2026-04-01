@@ -88,10 +88,7 @@ class SettingScene(BaseScene):
         return "Moving Pipes: ON" if self.game.context.pipes_move_vertically else "Moving Pipes: OFF"
 
     def _update_btn_text(self, btn, text):
-        btn.text_input = text
-        btn.text = btn.font.render(text, True, btn.base_color)
-        btn.rect = btn.text.get_rect(center=(btn.x_pos, btn.y_pos))
-        btn.text_rect = btn.text.get_rect(center=(btn.x_pos, btn.y_pos))
+        btn.set_text(text)
 
     def _slider_knob_center_x(self):
         return self.slider_rect.left + (self.slider_rect.width * self.game.context.music_volume)

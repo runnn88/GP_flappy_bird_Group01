@@ -19,19 +19,28 @@ class Button:
         # ===== TEXT =====
         self.text = self.font.render(self.text_input, True, self.base_color)
 
-        # ===== FIX: padding đúng chỗ =====
-        padding_x = 60
-        padding_y = 30
+        self.padding_x = 60
+        self.padding_y = 30
 
         if self.image is None:
             self.rect = pygame.Rect(
                 0, 0,
-                self.text.get_width() + padding_x,
-                self.text.get_height() + padding_y
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y
             )
             self.rect.center = (self.x_pos, self.y_pos)
         else:
             self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+
+    def set_text(self, text):
+        self.text_input = text
+        self.text = self.font.render(self.text_input, True, self.base_color)
+        if self.image is None:
+            self.rect.size = (
+                self.text.get_width() + self.padding_x,
+                self.text.get_height() + self.padding_y,
+            )
+            self.rect.center = (self.x_pos, self.y_pos)
 
     def update(self, dt):
         mouse_pos = pygame.mouse.get_pos()
