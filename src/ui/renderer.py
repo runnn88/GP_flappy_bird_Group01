@@ -17,5 +17,7 @@ class SceneRenderer:
         self.background.draw(screen, game_scene.parallax)
         self.pipes.draw(screen, game_scene.pipes, game_scene.game.context.background_theme)
         self.coins.draw(screen, game_scene.coins, game_scene.game.context)
+        for bee in game_scene.bees:
+            bee.draw(screen)
         self.player.draw(screen, game_scene.player, game_scene.game.context)
         self.hud.draw(screen, game_scene.game.context)

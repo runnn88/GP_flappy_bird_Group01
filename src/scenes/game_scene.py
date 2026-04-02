@@ -21,6 +21,8 @@ from src.entities.player import Player
 from src.systems.parallax_system import ParallaxSystem
 from src.systems.spawn_system import SpawnSystem
 from src.ui.renderer import SceneRenderer
+from src.entities.bee import Bee
+from config import WIDTH, HEIGHT
 
 class GameScene(BaseScene):
     def enter(self):
@@ -29,7 +31,7 @@ class GameScene(BaseScene):
         self.parallax = ParallaxSystem(self.game.context.background_theme)
         self.spawner = SpawnSystem()
         self.renderer = SceneRenderer()
-
+    
         self.pipes = []
         self.coins = []
         self.elapsed_time = 0
@@ -45,6 +47,10 @@ class GameScene(BaseScene):
         self.game.context.flip_exit_spawn_score = None
         self.game.context.pre_flip_theme = "noon"
         self._configure_theme_cycle("noon")
+        
+        self.bees = []
+        self.bee_spawn_timer = 0
+        self.bee_next_spawn = random.uniform(3.0, 6.0)
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
@@ -67,6 +73,14 @@ class GameScene(BaseScene):
 
         self._update_flip_objectives()
         self.spawner.update(dt, self.pipes, self.coins, self.game.context)
+        
+        self.bee_spawn_timer += dt
+        if self.bee_spawn_timer >= self.bee_next_spawn:
+            self.bee_spawn_timer = 0
+            self.bee_next_spawn = random.uniform(2.5, 6.0) 
+            
+            bee_y = random.randint(100, HEIGHT - 100)
+            self.bees.append(Bee(WIDTH, bee_y))
 
         for p in self.pipes:
             if p.collides(self.player.rect()):
@@ -83,6 +97,14 @@ class GameScene(BaseScene):
                         self._deactivate_flipped_mode()
                     else:
                         self._activate_flipped_mode()
+        
+        for bee in self.bees[:]:
+            bee.update(dt, self.game.context)
+            
+            if bee.offscreen():
+                self.bees.remove(bee)
+            elif self.player.rect().colliderect(bee.rect()):
+                self.trigger_game_over()
 
         if self.player.y < 0 or self.player.y + 50 > HEIGHT:
             self.trigger_game_over()
