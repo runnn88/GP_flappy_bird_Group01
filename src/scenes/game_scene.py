@@ -71,6 +71,11 @@ class GameScene(BaseScene):
                 self.coins.remove(c)
                 self.game.context.score += 1
                 self.game.audio.play_sfx("point")
+                
+                if getattr(c, 'is_gravity_apple', False):
+                    self.game.context.gravity *= -1
+                else:
+                    self.game.context.score += 1
 
         if self.player.y < 0 or self.player.y + 50 > HEIGHT:
             self.trigger_game_over()

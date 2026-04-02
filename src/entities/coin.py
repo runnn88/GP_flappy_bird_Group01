@@ -51,6 +51,13 @@ APPLE_COLORS = {
     4: (255, 255, 255)   # highlight (nếu cần)
 }
 
+GREEN_APPLE_COLORS = {
+    "R": (50, 205, 50), 
+    "G": (0, 100, 0),   
+    "W": (255, 255, 255),
+    "B": (0, 0, 0)
+}
+
 # ====== VERSION COIN ======
 # class Coin:
 #     SIZE = 30
@@ -123,10 +130,12 @@ APPLE_COLORS = {
 class Coin:
     SIZE = 32  # kích thước tổng thể
 
-    def __init__(self, x, y, anchor_pipe=None):
+    def __init__(self, x, y, anchor_pipe=None, is_gravity_apple=False):
         self.x = x
         self.y = y
         self.anchor_pipe = anchor_pipe
+        self.is_gravity_apple = is_gravity_apple
+        
 
         frames = self._build_frames()
         self.animation = Animation(frames, fps=12)  # chậm cho dễ thấy nhấp nháy
@@ -163,6 +172,7 @@ class Coin:
             self.y = max(min_y, min(max_y, centered_y))
 
     def _build_frames(self):
+        current_colors = GREEN_APPLE_COLORS if self.is_gravity_apple else APPLE_COLORS
         base1 = create_pixel_sprite(APPLE_MATRIX, 4, APPLE_COLORS)
         base2 = create_pixel_sprite(APPLE_MATRIX_2, 4, APPLE_COLORS)
 
@@ -170,7 +180,6 @@ class Coin:
         frames = []
 
         for i, w in enumerate(widths):
-            # src = base1 if i % 2 == 0 else base2
             src = base1
             src = pygame.transform.scale(src, (self.SIZE, self.SIZE))
 
@@ -178,9 +187,10 @@ class Coin:
 
             # ===== GLOW =====
             glow = pygame.Surface((self.SIZE, self.SIZE), pygame.SRCALPHA)
+            glow_color = (80, 255, 80, 80) if self.is_gravity_apple else (255, 80, 80, 80)
             pygame.draw.ellipse(
                 glow,
-                (255, 80, 80, 80),  # đỏ nhẹ + alpha
+                glow_color, 
                 (0, 0, self.SIZE, self.SIZE)
             )
             frame.blit(glow, (0, 0))

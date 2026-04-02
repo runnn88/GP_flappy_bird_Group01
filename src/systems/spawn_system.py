@@ -39,7 +39,8 @@ class SpawnSystem:
     def _spawn_coin(self, pipe):
         orb_x = pipe.x + (pipe.width - Coin.SIZE) / 2
         orb_y = pipe.top + (pipe.gap - Coin.SIZE) / 2
-        return Coin(orb_x, orb_y, anchor_pipe=pipe)
+        is_green = random.random() < 0.15
+        return Coin(orb_x, orb_y, is_gravity_apple=is_green, anchor_pipe=pipe)
 
     def _spawn_between_pairs_coin(self, left_pipe, right_pipe):
         left_center_x = left_pipe.x + (left_pipe.width / 2)
@@ -56,5 +57,6 @@ class SpawnSystem:
             coin_y = ((left_pipe.gap_y + right_pipe.gap_y) / 2) - (Coin.SIZE / 2)
         else:
             coin_y = random.uniform(upper_bound, lower_bound)
+        is_green = random.random() < 0.15
 
-        return Coin(coin_x, coin_y)
+        return Coin(coin_x, coin_y, is_gravity_apple=is_green)

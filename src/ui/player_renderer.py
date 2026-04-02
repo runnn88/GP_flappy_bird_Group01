@@ -246,11 +246,13 @@ import pygame
 import math
 
 class PlayerRenderer:
-    def draw(self, screen, player):
+    def draw(self, screen, player, context):
         trail = player.trail
 
+        frame = player.animation.get_frame()
+        if context.gravity < 0:
+            frame = pygame.transform.flip(frame, False, True)
         if len(trail) < 2:
-            frame = player.animation.get_frame()
             screen.blit(frame, (player.x, player.y))
             return
         

@@ -47,12 +47,20 @@ class Player:
 
     def update(self, dt, keys, context):
         if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
-            self.vel = FLAP_FORCE
+            if context.gravity > 0:
+                self.vel = FLAP_FORCE
+            else: 
+                self.vel = abs(FLAP_FORCE)
 
         self.vel += context.gravity * dt
         self.y += self.vel * dt
         
-        if self.vel < 0: #flapping
+        if context.gravity > 0:
+            is_flapping = self.vel < 0 
+        else: 
+            is_flapping = self.vel > 0
+        
+        if is_flapping:
             self.animation = self.flap_anim
         else: 
             self.animation = self.idle_anim
@@ -124,7 +132,8 @@ class Player:
             p["pos"][1] += p["vel"][1] * dt
 
             # gravity nhẹ
-            p["vel"][1] += 50 * dt
+            gravity_direction = 1 if context.gravity > 0 else -1
+            p["vel"][1] += 50 * gravity_direction * dt
 
             # scroll theo map
             p["pos"][0] -= context.scroll_speed * dt
