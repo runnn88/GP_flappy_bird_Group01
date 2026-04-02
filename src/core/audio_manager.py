@@ -129,7 +129,7 @@ class AudioManager:
             "boom": self._build_boom_sfx(),
         }
         audio_root = Path("assets/audio")
-        point_path = audio_root / "point_cut.wav"
+        point_path = audio_root / "bite-editted.wav"
         if point_path.exists():
             sfx["point"] = pygame.mixer.Sound(str(point_path))
         else:
