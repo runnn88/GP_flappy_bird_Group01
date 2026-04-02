@@ -143,7 +143,7 @@ class MenuScene(BaseScene):
 
         # ===== TEXT =====
         top_text = "HUNGRY"
-        bottom_text = "CHIKAWA"
+        bottom_text = "BIRBY-CHAN"
 
         # scale font khác nhau để tạo hierarchy
         top_font = load_font("PressStart2P-Regular.ttf", 40)
