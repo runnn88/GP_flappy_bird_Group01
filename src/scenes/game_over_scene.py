@@ -84,9 +84,9 @@ class GameOverScene(BaseScene):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
-                self.game.context.background_theme = self.pre_theme
+                self.game.context.background_theme = "noon"
                 self.game.state_machine.change(GAME_SCENE)
 
             if event.key == pygame.K_ESCAPE:
-                self.game.context.background_theme = self.pre_theme
+                self.game.context.background_theme = "noon"
                 self.game.state_machine.change(MENU_SCENE)
