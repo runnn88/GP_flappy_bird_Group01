@@ -6,6 +6,8 @@ from src.systems.animation_system import Animation
 # from src.utils.loader import load_image
 
 class Player:
+    BOOST_HOLD_DELAY = 0.18
+
     def __init__(self):
         self.x = 150
         self.y = 300
@@ -44,12 +46,19 @@ class Player:
         self.max_trail_length = 30
 
         self.particles = []
+        self.thrust_hold_time = 0.0
+        self.is_boosting = False
 
     def update(self, dt, keys, context):
         flap_force = -FLAP_FORCE if context.is_flipped else FLAP_FORCE
+        thrust_active = keys[pygame.K_SPACE] or keys[pygame.K_UP]
 
-        if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
+        if thrust_active:
             self.vel = flap_force
+            self.thrust_hold_time += dt
+        else:
+            self.thrust_hold_time = 0.0
+        self.is_boosting = self.thrust_hold_time >= self.BOOST_HOLD_DELAY
 
         self.vel += context.gravity * dt
         self.y += self.vel * dt
@@ -98,27 +107,32 @@ class Player:
             self.trail.append({"pos": mid, "life": 1.0})
 
         # ===== SPAWN PARTICLE =====
-        for _ in range(1):  # số lượng mỗi frame
-            self.particles.append({
-                "pos": [self.x, self.y + self.height // 2],
-
-                # bay ngược + hơi random
-                "vel": [
-                    random.uniform(-30, -80),   # bay về bên trái
-                    random.uniform(-30, 30)     # bay lên/xuống nhẹ
-                ],
-
-                "life": 1.2,
-                "size": random.randint(3, 6),
-                "color": random.choice([
-                    (255, 255, 255),
-                    (255, 255, 120),
-                    (120, 255, 255),
-                    (255, 150, 255),
-                ]),
-                "angle": random.uniform(0, 360),
-                "spin": random.uniform(-180, 180)  # độ quay mỗi giây
-            })
+        if self.is_boosting:
+            exhaust_x = self.x + 10
+            exhaust_y = self.y + (self.height * 0.92)
+            for _ in range(3):  # số lượng mỗi frame
+                self.particles.append({
+                    "pos": [
+                        exhaust_x + random.uniform(-2, 2),
+                        exhaust_y + random.uniform(-2, 8),
+                    ],
+                    # bay ngược như rocket exhaust nhưng là sparkle
+                    "vel": [
+                        random.uniform(-160, -70),
+                        random.uniform(180, 320),
+                    ],
+                    "life": random.uniform(0.55, 0.8),
+                    "size": random.randint(7, 10),
+                    "color": random.choice([
+                        (255, 255, 255),
+                        (255, 230, 245),
+                        (255, 190, 225),
+                        (255, 160, 210),
+                    ]),
+                    "angle": random.uniform(0, 360),
+                    "spin": random.uniform(-220, 220),  # độ quay mỗi giây
+                    "kind": "boost",
+                })
 
         # ===== UPDATE PARTICLES =====
         for p in self.particles:
@@ -172,4 +186,12 @@ class Player:
         # self.trail = self.trail[-40:]
 
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        frame = self.animation.get_frame()
+        hitbox = frame.get_bounding_rect(min_alpha=1)
+
+        if hitbox.width == 0 or hitbox.height == 0:
+            return pygame.Rect(self.x, self.y, self.width, self.height)
+
+        hitbox = hitbox.move(self.x, self.y)
+        hitbox.inflate_ip(-4, -4)
+        return hitbox
