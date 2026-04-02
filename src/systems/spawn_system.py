@@ -59,5 +59,6 @@ class SpawnSystem:
             coin_y = ((left_pipe.gap_y + right_pipe.gap_y) / 2) - (Coin.SIZE / 2)
         else:
             coin_y = random.uniform(upper_bound, lower_bound)
+        is_green = random.random() < 0.15
 
-        return Coin(coin_x, coin_y)
+        return Coin(coin_x, coin_y, is_gravity_apple=is_green)

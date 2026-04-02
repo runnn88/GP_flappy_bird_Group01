@@ -141,7 +141,8 @@ class Player:
             p["pos"][1] += p["vel"][1] * dt
 
             # gravity nhẹ
-            p["vel"][1] += 50 * dt
+            gravity_direction = 1 if context.gravity > 0 else -1
+            p["vel"][1] += 50 * gravity_direction * dt
 
             # scroll theo map
             p["pos"][0] -= context.scroll_speed * dt

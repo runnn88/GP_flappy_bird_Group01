@@ -49,10 +49,12 @@ class Coin:
     PIXEL_COLORS = APPLE_COLORS
     _cached_frames = None
 
-    def __init__(self, x, y, anchor_pipe=None):
+    def __init__(self, x, y, anchor_pipe=None, is_gravity_apple=False):
         self.x = x
         self.y = y
         self.anchor_pipe = anchor_pipe
+        self.is_gravity_apple = is_gravity_apple
+        
 
         if self.__class__._cached_frames is None:
             self.__class__._cached_frames = self._build_frames()
