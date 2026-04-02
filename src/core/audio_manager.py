@@ -14,10 +14,12 @@ class AudioManager:
         self.active_track = None
         self.music_channel = None
         self.using_music_stream = False
+        self.sfx_channel_count = 12
 
         try:
             if not pygame.mixer.get_init():
-                pygame.mixer.init(frequency=22050, size=-16, channels=1)
+                pygame.mixer.init(frequency=22050, size=-16, channels=1, buffer=128)
+            pygame.mixer.set_num_channels(self.sfx_channel_count)
             self.available = True
         except pygame.error:
             return
@@ -51,8 +53,13 @@ class AudioManager:
         if sound is None:
             return
 
-        sound.set_volume(min(1.0, self.context.music_volume * 1.2))
-        sound.play()
+        volume = min(1.0, self.context.music_volume * 1.2)
+        channel = pygame.mixer.find_channel(force=True)
+        if channel is None:
+            return
+
+        channel.set_volume(volume)
+        channel.play(sound)
 
     def stop(self):
         if self.using_music_stream:
@@ -122,7 +129,7 @@ class AudioManager:
             "boom": self._build_boom_sfx(),
         }
         audio_root = Path("assets/audio")
-        point_path = audio_root / "point.ogg"
+        point_path = audio_root / "point_cut.wav"
         if point_path.exists():
             sfx["point"] = pygame.mixer.Sound(str(point_path))
         else:
