@@ -69,11 +69,18 @@ class PlayerRenderer:
             size = p["size"]
 
             if kind == "boost":
-                glow_radius = int(size * (1.8 + life))
-                core_radius = max(2, int(size * (0.9 + life * 0.3)))
-                pygame.draw.circle(screen, (*color, int(alpha * 0.35)), (int(x), int(y)), glow_radius)
-                pygame.draw.circle(screen, (*color, alpha), (int(x), int(y)), core_radius)
-                pygame.draw.circle(screen, (255, 245, 255, alpha), (int(x), int(y)), max(1, core_radius // 2))
+                trail_length = int(size * (1.15 + life * 0.45))
+                glow_radius = max(2, int(size * (0.45 + life * 0.15)))
+                sparkle_span = max(2, int(size * (0.4 + life * 0.12)))
+                core_radius = max(1, int(size * 0.22))
+                highlight = (255, 170, 220)
+                pygame.draw.line(screen, (*highlight, int(alpha * 0.28)), (x, y), (x + trail_length, y + 1), max(1, core_radius))
+                pygame.draw.circle(screen, (*highlight, int(alpha * 0.16)), (int(x), int(y)), glow_radius)
+                pygame.draw.line(screen, (*color, alpha), (x - sparkle_span, y), (x + sparkle_span, y), 1)
+                pygame.draw.line(screen, (*color, alpha), (x, y - sparkle_span), (x, y + sparkle_span), 1)
+                pygame.draw.line(screen, (*highlight, int(alpha * 0.85)), (x - sparkle_span * 0.65, y - sparkle_span * 0.65), (x + sparkle_span * 0.65, y + sparkle_span * 0.65), 1)
+                pygame.draw.line(screen, (*highlight, int(alpha * 0.85)), (x - sparkle_span * 0.65, y + sparkle_span * 0.65), (x + sparkle_span * 0.65, y - sparkle_span * 0.65), 1)
+                pygame.draw.circle(screen, (255, 245, 250, alpha), (int(x), int(y)), core_radius)
             else:
                 span = max(2, int(size * (0.6 + life * 0.3)))
                 pygame.draw.line(screen, (*color, alpha), (x - span, y), (x + span, y), 2)
