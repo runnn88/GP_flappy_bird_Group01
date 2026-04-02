@@ -40,13 +40,15 @@ class GameScene(BaseScene):
         self.game.context.is_game_over = False
         self.game.context.gravity = GRAVITY
         self.game.context.scroll_speed = SCROLL_SPEED
-        self.game.context.background_theme = "noon"
+        # self.game.context.background_theme = "noon"
+        current_theme = self.game.context.background_theme or "noon"
+        
         self.game.context.is_flipped = False
         self.game.context.pending_flip_apple = False
         self.game.context.next_flip_spawn_score = FLIPPED_START_SCORE
         self.game.context.flip_exit_spawn_score = None
         self.game.context.pre_flip_theme = "noon"
-        self._configure_theme_cycle("noon")
+        self._configure_theme_cycle(current_theme)
         
         self.bees = []
         self.bee_spawn_timer = 0

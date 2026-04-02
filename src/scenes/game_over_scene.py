@@ -13,6 +13,7 @@ class GameOverScene(BaseScene):
     def enter(self):
         self.title_font = load_font("VT323-Regular.ttf", 80)
         self.text_font = load_font("VT323-Regular.ttf", 40)
+        self.pre_theme = self.game.context.background_theme
 
         # tạo icon apple
         self.apple_icon = create_pixel_sprite(APPLE_MATRIX, 5, APPLE_COLORS)
@@ -83,7 +84,9 @@ class GameOverScene(BaseScene):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
+                self.game.context.background_theme = self.pre_theme
                 self.game.state_machine.change(GAME_SCENE)
 
             if event.key == pygame.K_ESCAPE:
+                self.game.context.background_theme = self.pre_theme
                 self.game.state_machine.change(MENU_SCENE)

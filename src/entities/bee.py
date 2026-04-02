@@ -11,7 +11,7 @@ class Bee:
         self.height = 40
         
         # try:
-        self.image = pygame.image.load("assets/images/usagi.png").convert_alpha()
+        self.image = pygame.image.load("assets/images/bee.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
         # except FileNotFoundError:
         #     self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
